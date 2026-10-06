@@ -1,0 +1,49 @@
+{
+  "name": "indomitox-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Indómito X — web: sitio público, panel del Guía y panel de administración",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "screenshots": "node scripts/screenshots.mjs"
+  },
+  "dependencies": {
+    "@juandavidfuentes/indomitox-shared": "^0.1.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "next": "16.3.8",
+    "next-intl": "^4.14.9",
+    "next-themes": "^0.4.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "@types/react": "~19.2.2",
+    "@types/react-dom": "~19.2.2",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.2"
+  },
+  "overrides": {
+    "@swc/core": "1.16.2"
+  },
+  "allowScripts": {
+    "@swc/core": true,
+    "@parcel/watcher": true,
+    "unrs-resolver": true,
+    "esbuild": true
+  }
+}
