@@ -41,7 +41,7 @@ export function Destinations() {
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 bg-gradient-to-b from-night/0 from-35% to-night/90"
+                className="absolute inset-0 -z-10 bg-gradient-to-b from-night/0 from-25% via-night/45 via-60% to-night/90"
               />
               <h3 className="font-display text-3xl leading-none font-extrabold uppercase italic sm:text-4xl">
                 {destination.name}

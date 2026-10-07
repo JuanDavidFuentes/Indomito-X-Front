@@ -13,7 +13,7 @@ export function Levels() {
       <ul className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
         {DIFFICULTIES.map((level) => (
           <li key={level} className="flex flex-col gap-2 bg-card p-6">
-            <DifficultyShape level={level} className="h-6" />
+            <DifficultyShape level={level} className="h-6 self-start" />
             <p className="mt-2 font-display text-2xl font-bold uppercase">{t(`difficulty.${level}`)}</p>
             <p className="text-muted-foreground">{t(`home.levels.${level}`)}</p>
           </li>
