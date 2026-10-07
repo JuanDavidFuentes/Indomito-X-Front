@@ -18,9 +18,11 @@ const barlow = Barlow({
   display: 'swap',
 });
 
+// 800 itálica para los titulares de aventura (hero y secciones); 600/700 rectas para el resto.
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin', 'latin-ext'],
-  weight: ['600', '700'],
+  weight: ['600', '700', '800'],
+  style: ['normal', 'italic'],
   variable: '--font-barlow-condensed',
   display: 'swap',
 });
@@ -68,7 +70,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html
       lang={locale}
-      className={`${barlow.variable} ${barlowCondensed.variable}`}
+      className={`${barlow.variable} ${barlowCondensed.variable} scroll-smooth scroll-pt-20`}
       suppressHydrationWarning
     >
       <body className="flex min-h-dvh flex-col">

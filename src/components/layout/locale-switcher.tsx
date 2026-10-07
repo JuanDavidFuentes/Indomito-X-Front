@@ -22,7 +22,7 @@ export function LocaleSwitcher() {
   const [isPending, startTransition] = useTransition();
 
   return (
-    <label className="relative inline-flex h-11 items-center gap-1.5 rounded-full px-3 text-sm font-medium hover:bg-muted">
+    <label className="relative inline-flex h-11 items-center gap-1.5 rounded-full px-3 text-sm font-medium transition-colors duration-150 hover:bg-current/10">
       <Translate size={20} aria-hidden="true" />
       <span className="sr-only">{t('language')}</span>
       <select

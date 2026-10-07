@@ -12,5 +12,6 @@ export const routing = defineRouting({
   pathnames: {
     '/': '/',
     '/buscar': { es: '/buscar', en: '/search', fr: '/recherche' },
+    '/creditos': { es: '/creditos', en: '/credits', fr: '/credits' },
   },
 });

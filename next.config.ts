@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   turbopack: { root },
   outputFileTracingRoot: root,
+  images: {
+    // AVIF primero (más liviano) y WebP como respaldo. Las fotos viven en src/assets/photos.
+    formats: ['image/avif', 'image/webp'],
+    qualities: [70, 80],
+  },
   env: {
     NEXT_PUBLIC_API_URL: process.env.API_URL ?? 'http://localhost:4000',
     NEXT_PUBLIC_WEB_URL: process.env.WEB_URL ?? 'http://localhost:3000',
