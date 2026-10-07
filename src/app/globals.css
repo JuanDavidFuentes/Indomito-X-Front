@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 @import '@juandavidfuentes/indomitox-shared/tokens/web.css';
+/* shadcn/ui: animaciones de entrada/salida y variantes data-* (los colores salen de nuestros tokens). */
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* Nombres que usan los componentes de shadcn/ui. */
+@theme inline {
+  --font-heading: var(--font-display);
+}
 
 /* Movimiento de marca (MASTER §6). Con "reducir movimiento" la regla de abajo los deja quietos. */
 @theme {
@@ -57,6 +65,10 @@
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
   }
