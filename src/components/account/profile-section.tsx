@@ -21,6 +21,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { api } from '@/lib/api/client';
 import { applyApiIssues, useErrorText } from '@/lib/forms';
 import { useStoreMe } from './account-data';
+import { AvatarField } from './avatar-field';
 import { AccountSection } from './section';
 
 const ProfileFormSchema = UpdateProfileSchema.pick({ name: true, city: true, languages: true, locale: true });
@@ -60,6 +61,9 @@ export function ProfileSection({ me }: { me: MeResponse }) {
 
   return (
     <AccountSection id="datos" icon={IdentificationCard} title={t('account.sections.profile')} hint={t('account.profileHint')}>
+      <div className="mb-8">
+        <AvatarField me={me} />
+      </div>
       <form onSubmit={onSubmit} noValidate>
         <FieldGroup>
           <div className="grid gap-5 md:grid-cols-2">
@@ -132,8 +136,6 @@ export function ProfileSection({ me }: { me: MeResponse }) {
               </Field>
             )}
           />
-
-          <p className="text-sm text-muted-foreground">{t('account.photoSoon')}</p>
 
           <div>
             <Button type="submit" disabled={form.formState.isSubmitting || !form.formState.isDirty}>

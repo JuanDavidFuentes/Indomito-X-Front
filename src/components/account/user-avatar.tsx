@@ -8,7 +8,7 @@ export function initials(name: string): string {
   return letters.join('').toUpperCase();
 }
 
-/** Foto de Google si la hay; si no, las iniciales sobre la marca (texto Noche, 5,3:1). La foto propia llega con F3. */
+/** La foto que subió (o la de Google); si no hay, las iniciales sobre la marca (texto Noche, 5,3:1). */
 export function UserAvatar({
   user,
   className,

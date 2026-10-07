@@ -1,4 +1,4 @@
-import { AUTH_COOKIES, LOCALES, WEB_PATHNAMES, type Locale } from '@juandavidfuentes/indomitox-shared';
+import { AUTH_COOKIES, LOCALES, PRIVATE_WEB_PATHNAMES, WEB_PATHNAMES, type Locale } from '@juandavidfuentes/indomitox-shared';
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse, type NextRequest } from 'next/server';
 import { routing } from './i18n/routing';
@@ -8,9 +8,9 @@ const intl = createMiddleware(routing);
 const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL ?? 'http://localhost:3000';
 
-/** Páginas que exigen sesión, en cada idioma (p. ej. /es/cuenta, /en/account). */
+/** Páginas que exigen sesión, en cada idioma (p. ej. /es/cuenta, /en/dashboard, /fr/admin). */
 const PROTECTED = LOCALES.flatMap((locale) =>
-  (['/cuenta'] as const).map((pathname) => ({ locale, prefix: `/${locale}${WEB_PATHNAMES[pathname][locale]}` })),
+  PRIVATE_WEB_PATHNAMES.map((pathname) => ({ locale, prefix: `/${locale}${WEB_PATHNAMES[pathname][locale]}` })),
 );
 
 function protectedLocale(pathname: string): Locale | undefined {

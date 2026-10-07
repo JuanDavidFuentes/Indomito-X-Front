@@ -1,7 +1,7 @@
 'use client';
 
 import { LOCALES, WEB_PATHNAMES } from '@juandavidfuentes/indomitox-shared';
-import { SignOut, UserCircle } from '@phosphor-icons/react';
+import { Compass, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
@@ -84,6 +84,22 @@ export function AccountMenu() {
             {t('nav.account')}
           </Link>
         </DropdownMenuItem>
+        {user.host || user.signupIntent === 'HOST' ? (
+          <DropdownMenuItem asChild>
+            <Link href="/panel">
+              <Compass size={20} aria-hidden="true" />
+              {t('nav.hostPanel')}
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+        {user.role === 'ADMIN' ? (
+          <DropdownMenuItem asChild>
+            <Link href="/admin/guias">
+              <ShieldCheck size={20} aria-hidden="true" />
+              {t('nav.admin')}
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"

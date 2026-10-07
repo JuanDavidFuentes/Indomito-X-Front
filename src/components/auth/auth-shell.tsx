@@ -44,7 +44,7 @@ export function AuthShell({
             alt={t(`photos.${photo}`)}
             fill
             sizes="(min-width: 1024px) 40rem, 1px"
-            quality={75}
+            quality={80}
             placeholder="blur"
             className="-z-20 object-cover"
           />

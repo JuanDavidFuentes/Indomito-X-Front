@@ -25,6 +25,14 @@ function projectRoot(): string {
 
 const root = projectRoot();
 
+/**
+ * Imágenes que suben los usuarios (logos, portadas y fotos de perfil): viven en el bucket
+ * público de S3. En local es RustFS en localhost:9000, una IP local que el optimizador de
+ * Next bloquea por defecto (SSRF); solo en ese caso se permite.
+ */
+const mediaUrl = new URL(process.env.MEDIA_URL ?? 'http://localhost:9000/indomitox-public');
+const mediaIsLocal = ['localhost', '127.0.0.1', '::1'].includes(mediaUrl.hostname);
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
@@ -34,6 +42,8 @@ const nextConfig: NextConfig = {
     // AVIF primero (más liviano) y WebP como respaldo. Las fotos viven en src/assets/photos.
     formats: ['image/avif', 'image/webp'],
     qualities: [70, 80],
+    remotePatterns: [new URL(`${mediaUrl.origin}${mediaUrl.pathname.replace(/\/+$/, '')}/**`)],
+    dangerouslyAllowLocalIP: mediaIsLocal,
   },
   env: {
     NEXT_PUBLIC_API_URL: process.env.API_URL ?? 'http://localhost:4000',

@@ -75,7 +75,7 @@ export function SignUpForm({ googleClientId }: { googleClientId: string | null }
       const response = await api<AuthResponse>('/v1/auth/register', { method: 'POST', body: values });
       toast.success(t('auth.welcomeCheckEmail'));
       // AUTH-04: quien quiere ofrecer aventuras sigue en su cuenta (alta de Guía en F2).
-      complete(response, values.intent === 'HOST' ? 'account' : 'home');
+      complete(response, values.intent === 'HOST' ? 'host' : 'home');
     } catch (error) {
       if (!applyApiIssues(error, form.setError)) setFormError(errors.api(error));
     }

@@ -70,6 +70,16 @@ test('registro, verificación, perfil, sesión y eliminación de la cuenta', asy
   await page.locator('#datos').getByRole('button', { name: 'Guardar' }).click();
   await expect(page.getByText('Cambios guardados.').first()).toBeVisible();
 
+  // Foto de perfil: se sube directo a S3 y se puede quitar.
+  const png = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+    'base64',
+  );
+  await page.getByLabel('Cambiar foto').setInputFiles({ name: 'yo.png', mimeType: 'image/png', buffer: png });
+  await expect(page.getByText('Foto actualizada.')).toBeVisible();
+  await page.getByRole('button', { name: 'Quitar foto' }).click();
+  await expect(page.getByText('Quitamos tu foto.')).toBeVisible();
+
   await page.getByRole('button', { name: 'Agregar participante' }).click();
   const dialog = page.getByRole('dialog');
   await dialog.getByLabel('Nombre completo').fill('Sofía Explora');

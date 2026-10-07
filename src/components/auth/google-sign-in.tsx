@@ -54,7 +54,7 @@ export function GoogleSignIn({ clientId, intent }: { clientId: string; intent?: 
           body: { idToken, locale, intent, acceptTerms: true, acceptPrivacy: true },
         });
         if (response.isNewUser) toast.success(t('welcomeCheckEmail'));
-        complete(response, intent === 'HOST' ? 'account' : 'home');
+        complete(response, intent === 'HOST' ? 'host' : 'home');
       } catch (error) {
         toast.error(errors.api(error));
       }

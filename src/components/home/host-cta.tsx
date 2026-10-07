@@ -38,7 +38,7 @@ export function HostCta() {
           </h2>
           <p className="mt-4 max-w-xl text-lg text-night-foreground/85">{t('home.hostCtaBody')}</p>
           <Link
-            href="/"
+            href="/panel"
             className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl border-2 border-night-foreground px-6 font-semibold transition-colors duration-150 hover:bg-night-foreground hover:text-night"
           >
             {t('home.hostCtaButton')}

@@ -24,6 +24,17 @@ export async function serverApi<T>(path: string): Promise<ServerApiResult<T>> {
   }
 }
 
+/**
+ * Recurso público que puede no existir (p. ej. la página de un Guía): se cachea `revalidate`
+ * segundos (ISR). Distingue 404 (no existe) de la API caída (lanza el error).
+ */
+export async function publicResource<T>(path: string, revalidate: number): Promise<T | null> {
+  const res = await fetch(`${SERVER_API_URL}${path}`, { next: { revalidate } });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`La API respondió ${res.status} en ${path}`);
+  return (await res.json()) as T;
+}
+
 /** Datos públicos y poco cambiantes (métodos de ingreso, catálogo): se cachean unos minutos. */
 export async function publicApi<T>(path: string, fallback: T): Promise<T> {
   try {

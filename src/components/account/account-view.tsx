@@ -2,6 +2,7 @@
 
 import type { MeResponse, SavedParticipant, SportDto } from '@juandavidfuentes/indomitox-shared';
 import {
+  ArrowRight,
   CheckCircle,
   EnvelopeSimple,
   FirstAidKit,
@@ -18,8 +19,10 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { TopoPattern } from '@/components/brand/topo-pattern';
+import { HostStatusBadge } from '@/components/host/status-badge';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api/client';
 import { ApiError } from '@/lib/api/errors';
 import { useErrorText } from '@/lib/forms';
@@ -150,18 +153,33 @@ export function AccountView({
 
         <div className="grid min-w-0 grid-cols-1 gap-8">
           {user.emailVerified ? null : <VerifyEmailBanner email={user.email} />}
-          {user.signupIntent === 'HOST' ? (
-            <div className="relative overflow-hidden rounded-xl bg-night p-6 text-night-foreground sm:p-8 dark:border dark:border-border dark:bg-card">
-              <TopoPattern variant="band" className="absolute inset-0 -z-0 size-full text-brand/20" />
-              <div className="relative">
-                <p className="tape">{t('common.comingSoon')}</p>
+          {/* AUTH-04: desde el perfil siempre se puede pasar a Guía. */}
+          <div className="relative overflow-hidden rounded-xl bg-night p-6 text-night-foreground sm:p-8 dark:border dark:border-border dark:bg-card">
+            <TopoPattern variant="band" className="absolute inset-0 -z-0 size-full text-brand/20" />
+            <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="tape">{t('host.panelTitle')}</p>
                 <h2 className="mt-4 font-display text-3xl leading-tight font-extrabold uppercase italic">
-                  {t('account.hostSoonTitle')}
+                  {user.host ? t('account.hostPanelTitle') : t('account.hostCtaTitle')}
                 </h2>
-                <p className="mt-2 max-w-2xl text-night-foreground/85">{t('account.hostSoonBody')}</p>
+                {user.host ? (
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <span className="font-semibold">{user.host.name ?? t('admin.unnamed')}</span>
+                    <HostStatusBadge status={user.host.status} size="sm" />
+                  </div>
+                ) : (
+                  <p className="mt-2 max-w-2xl text-night-foreground/85">{t('account.hostCtaBody')}</p>
+                )}
               </div>
+              <Link
+                href="/panel"
+                className="inline-flex h-12 shrink-0 items-center gap-2 self-start rounded-xl bg-primary px-6 font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary/90 sm:self-auto"
+              >
+                {user.host ? t('account.hostPanelButton') : t('account.hostCtaButton')}
+                <ArrowRight size={20} weight="bold" aria-hidden="true" />
+              </Link>
             </div>
-          ) : null}
+          </div>
           <ProfileSection me={me} />
           <SportsSection me={me} sports={sports} />
           <EmergencySection me={me} />

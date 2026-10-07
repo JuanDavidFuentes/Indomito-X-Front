@@ -24,10 +24,11 @@ export function useCompleteSignIn() {
   const next = useNextPath();
   const locale = useLocale() as (typeof routing.locales)[number];
 
-  return (response: AuthResponse, fallback: 'home' | 'account' = 'home') => {
+  /** `host`: quien eligió "ofrecer aventuras" sigue al alta de Guía (AUTH-04). */
+  return (response: AuthResponse, fallback: 'home' | 'account' | 'host' = 'home') => {
     setUser(response.user);
-    const destination =
-      next ?? getPathname({ href: fallback === 'account' ? '/cuenta' : '/', locale });
+    const href = fallback === 'host' ? '/panel/verificacion' : fallback === 'account' ? '/cuenta' : '/';
+    const destination = next ?? getPathname({ href, locale });
     router.replace(destination);
     router.refresh();
   };
