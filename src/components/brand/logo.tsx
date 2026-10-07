@@ -27,7 +27,7 @@ export function Logo({ className, markClassName = 'size-8' }: { className?: stri
   return (
     <span className={`inline-flex items-center gap-2 ${className ?? ''}`}>
       <LogoMark className={`shrink-0 ${markClassName}`} />
-      <span className="font-display text-2xl leading-none font-extrabold tracking-[0.01em] uppercase italic">
+      <span className="font-display text-2xl leading-none font-extrabold tracking-[0.01em] whitespace-nowrap uppercase italic">
         Indómito <span className="text-brand">X</span>
       </span>
     </span>

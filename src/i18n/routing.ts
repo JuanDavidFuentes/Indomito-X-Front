@@ -1,9 +1,10 @@
-import { DEFAULT_LOCALE, LOCALES } from '@juandavidfuentes/indomitox-shared';
+import { DEFAULT_LOCALE, LOCALES, WEB_PATHNAMES } from '@juandavidfuentes/indomitox-shared';
 import { defineRouting } from 'next-intl/routing';
 
 /**
  * Rutas con prefijo de idioma y slugs traducidos (SEO por idioma).
- * Cada ruta nueva de la web se registra aquí con su traducción.
+ * Cada ruta nueva de la web se registra aquí con su traducción. Las que también usan la API
+ * (enlaces de los correos) o la app viven en `WEB_PATHNAMES` del paquete compartido.
  */
 export const routing = defineRouting({
   locales: LOCALES,
@@ -13,5 +14,6 @@ export const routing = defineRouting({
     '/': '/',
     '/buscar': { es: '/buscar', en: '/search', fr: '/recherche' },
     '/creditos': { es: '/creditos', en: '/credits', fr: '/credits' },
+    ...WEB_PATHNAMES,
   },
 });
