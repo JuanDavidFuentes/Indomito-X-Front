@@ -1,11 +1,15 @@
 'use client';
 
-import { ArrowSquareOut, Browser, Gauge, ShieldCheck, UsersThree, type Icon } from '@phosphor-icons/react';
+import { ArrowSquareOut, Browser, CalendarDots, Compass, Gauge, ShieldCheck, UsersThree, type Icon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 
-const ITEMS: { href: '/panel' | '/panel/verificacion' | '/panel/pagina' | '/panel/equipo'; icon: Icon; key: 'overview' | 'verification' | 'page' | 'team' }[] = [
+type PanelHref = '/panel' | '/panel/publicaciones' | '/panel/calendario' | '/panel/verificacion' | '/panel/pagina' | '/panel/equipo';
+
+const ITEMS: { href: PanelHref; icon: Icon; key: 'overview' | 'listings' | 'calendar' | 'verification' | 'page' | 'team' }[] = [
   { href: '/panel', icon: Gauge, key: 'overview' },
+  { href: '/panel/publicaciones', icon: Compass, key: 'listings' },
+  { href: '/panel/calendario', icon: CalendarDots, key: 'calendar' },
   { href: '/panel/verificacion', icon: ShieldCheck, key: 'verification' },
   { href: '/panel/pagina', icon: Browser, key: 'page' },
   { href: '/panel/equipo', icon: UsersThree, key: 'team' },
@@ -23,7 +27,8 @@ export function PanelNav({ publicSlug }: { publicSlug: string | null }) {
     <nav aria-label={t('sectionsLabel')} className="lg:sticky lg:top-24 lg:self-start">
       <ul className="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
         {ITEMS.map(({ href, icon: ItemIcon, key }) => {
-          const active = pathname === href;
+          // El editor de una publicación (/panel/publicaciones/…) marca "Publicaciones".
+          const active = href === '/panel' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
           return (
             <li key={href}>
               <Link

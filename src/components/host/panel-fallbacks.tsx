@@ -7,7 +7,10 @@ import type { routing } from '@/i18n/routing';
 import { getMyHost } from '@/lib/api/host-server';
 import { StartHost } from './start-host';
 
-type PanelPath = Extract<WebPathname, '/panel' | '/panel/verificacion' | '/panel/pagina' | '/panel/equipo'>;
+type PanelPath = Extract<
+  WebPathname,
+  '/panel' | '/panel/verificacion' | '/panel/pagina' | '/panel/equipo' | '/panel/publicaciones' | '/panel/calendario'
+>;
 
 /**
  * Lo común de las páginas del panel: si la sesión venció, a ingresar y de vuelta (AUTH-07); si

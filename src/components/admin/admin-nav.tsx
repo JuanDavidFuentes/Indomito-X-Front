@@ -1,11 +1,12 @@
 'use client';
 
-import { Books, IdentificationBadge, type Icon } from '@phosphor-icons/react';
+import { Books, IdentificationBadge, Scales, type Icon } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 
-const ITEMS: { href: '/admin/guias' | '/admin/catalogo'; icon: Icon; key: 'hosts' | 'catalog' }[] = [
+const ITEMS: { href: '/admin/guias' | '/admin/moderacion' | '/admin/catalogo'; icon: Icon; key: 'hosts' | 'moderation' | 'catalog' }[] = [
   { href: '/admin/guias', icon: IdentificationBadge, key: 'hosts' },
+  { href: '/admin/moderacion', icon: Scales, key: 'moderation' },
   { href: '/admin/catalogo', icon: Books, key: 'catalog' },
 ];
 
