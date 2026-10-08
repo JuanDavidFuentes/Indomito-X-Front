@@ -1,18 +1,13 @@
 'use client';
 
-import {
-  COLOMBIA_DEPARTMENTS,
-  SPORT_ELEMENTS,
-  type HostField,
-  type SportElement,
-} from '@juandavidfuentes/indomitox-shared';
+import { SPORT_ELEMENTS, type HostField, type SportElement } from '@juandavidfuentes/indomitox-shared';
 import { Check, ShieldCheck } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { TextField } from '@/components/forms/fields';
-import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '@/components/ui/field';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MunicipalityCombobox } from '@/components/forms/municipality-combobox';
+import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field';
 import { useErrorText } from '@/lib/forms';
 import { AutosaveIndicator, LockedNotice } from '../autosave-indicator';
 import { useSportName } from '../labels';
@@ -27,8 +22,7 @@ const FIELDS = [
   'contactPhone',
   'contactEmail',
   'address',
-  'department',
-  'city',
+  'municipalityCode',
 ] as const satisfies readonly HostField[];
 
 interface CompanyForm {
@@ -39,8 +33,7 @@ interface CompanyForm {
   contactPhone: string;
   contactEmail: string;
   address: string;
-  department: string;
-  city: string;
+  municipalityCode: string | null;
 }
 
 const DOT: Record<SportElement, string> = {
@@ -56,7 +49,6 @@ export function StepCompany({ mine, sports }: StepProps) {
   const t = useTranslations();
   const errors = useErrorText();
   const sportName = useSportName();
-  const departmentId = useId();
   const { can, lockedReason } = useHostEditing(mine);
   const { host } = mine;
   const { form, autosave } = useDraftForm<CompanyForm>(FIELDS, {
@@ -67,8 +59,7 @@ export function StepCompany({ mine, sports }: StepProps) {
     contactPhone: host.contactPhone ?? '',
     contactEmail: host.contactEmail ?? '',
     address: host.address ?? '',
-    department: host.department ?? '',
-    city: host.city ?? '',
+    municipalityCode: host.municipalityCode,
   });
   const [sportKeys, setSportKeys] = useState<string[]>(host.sportKeys);
   const companyLocked = !can('company');
@@ -105,29 +96,23 @@ export function StepCompany({ mine, sports }: StepProps) {
         <div className="grid gap-5 md:grid-cols-2">
           <TextField control={form.control} name="contactPhone" label={t('host.contactPhone')} type="tel" autoComplete="tel" disabled={contactLocked} />
           <TextField control={form.control} name="contactEmail" label={t('host.contactEmail')} type="email" inputMode="email" autoComplete="email" disabled={contactLocked} />
-          <Controller
-            control={form.control}
-            name="department"
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={departmentId}>{t('host.department')}</FieldLabel>
-                <Select value={field.value || undefined} onValueChange={field.onChange} disabled={contactLocked}>
-                  <SelectTrigger id={departmentId} className="w-full" aria-invalid={fieldState.invalid} onBlur={field.onBlur}>
-                    <SelectValue placeholder={t('host.departmentPlaceholder')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COLOMBIA_DEPARTMENTS.map((department) => (
-                      <SelectItem key={department.code} value={department.code}>
-                        {department.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FieldError>{errors.field(fieldState.error?.message)}</FieldError>
-              </Field>
-            )}
-          />
-          <TextField control={form.control} name="city" label={t('host.city')} placeholder={t('host.cityPlaceholder')} autoComplete="address-level2" disabled={contactLocked} />
+          <div className="md:col-span-2">
+            <Controller
+              control={form.control}
+              name="municipalityCode"
+              render={({ field, fieldState }) => (
+                <MunicipalityCombobox
+                  label={t('host.municipality')}
+                  description={t('host.municipalityHint')}
+                  value={field.value}
+                  onChange={(code) => field.onChange(code)}
+                  onBlur={field.onBlur}
+                  error={errors.field(fieldState.error?.message)}
+                  disabled={contactLocked}
+                />
+              )}
+            />
+          </div>
           <div className="md:col-span-2">
             <TextField control={form.control} name="address" label={t('host.address')} autoComplete="street-address" disabled={contactLocked} />
           </div>

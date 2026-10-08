@@ -69,7 +69,9 @@ export function GuideProfile({ guide, sports }: { guide: PublicHostResponse; spo
   const about = pickLocalized(guide.description, locale);
   const place = [guide.city, departmentName(guide.department)].filter(Boolean).join(', ');
   const sportElement = new Map(sports.map((sport) => [sport.key, sport.element]));
-  const sportName = (key: string) => (t.has(`sports.${key}` as never) ? t(`sports.${key}` as never) : key);
+  const sportName = (key: string) =>
+    pickLocalized(sports.find((sport) => sport.key === key)?.names, locale)?.text ??
+    (t.has(`sports.${key}` as never) ? t(`sports.${key}` as never) : key);
   const monthYear = (iso: string) => format.dateTime(new Date(iso), { month: 'long', year: 'numeric' });
   const links = SOCIAL_NETWORKS.filter((network): network is Exclude<SocialNetwork, 'whatsapp'> => network !== 'whatsapp' && Boolean(guide.socialLinks[network]));
 

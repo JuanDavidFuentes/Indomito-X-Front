@@ -2,12 +2,9 @@
 
 import type { DocumentRequirement } from '@juandavidfuentes/indomitox-shared';
 import { useTranslations } from 'next-intl';
+import { useSportName } from '@/lib/catalog';
 
-/** Nombre de un deporte del catálogo (los creados por el administrador sin traducción: su clave). */
-export function useSportName() {
-  const t = useTranslations();
-  return (key: string) => (t.has(`sports.${key}` as never) ? t(`sports.${key}` as never) : key);
-}
+export { useSportName };
 
 /** "RUT" o "NTS · Rafting": el nombre de un requisito de documento. */
 export function useRequirementLabel() {

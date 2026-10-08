@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Archivos de librerías copiados por scripts/copy-vendor.mjs.
+    "public/vendor/**",
   ]),
 ]);
 

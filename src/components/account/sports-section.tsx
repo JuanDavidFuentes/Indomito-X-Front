@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { api } from '@/lib/api/client';
+import { useSportName } from '@/lib/catalog';
 import { useErrorText } from '@/lib/forms';
 import { useStoreMe } from './account-data';
 import { AccountSection } from './section';
@@ -47,7 +48,7 @@ export function SportsSection({ me, sports }: { me: MeResponse; sports: SportDto
   const [saving, setSaving] = useState(false);
   const dirty = !sameSelection(selection, saved);
 
-  const sportName = (key: string) => (t.has(`sports.${key}` as never) ? t(`sports.${key}` as never) : key);
+  const sportName = useSportName(sports);
   const toggle = (key: string) =>
     setSelection((current) =>
       current.some((s) => s.sportKey === key)
