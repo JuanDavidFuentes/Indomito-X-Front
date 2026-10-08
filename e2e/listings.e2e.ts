@@ -4,6 +4,8 @@ import path from 'node:path';
 
 const FIXTURES = path.join(__dirname, 'fixtures');
 const PHOTOS = ['foto-1.jpg', 'foto-2.jpg', 'foto-3.jpg'].map((name) => path.join(FIXTURES, name));
+const API_URL = process.env.API_URL ?? 'http://localhost:4000';
+const WEB_URL = process.env.BASE_URL ?? 'http://localhost:3000';
 const DESCRIPTION =
   'Salida guiada con todo el equipo certificado, charla de seguridad antes de empezar y fotos del recorrido. Grupos pequeños para cuidar cada detalle.';
 
@@ -24,7 +26,7 @@ async function next(page: Page, title: string) {
   await expect(page.getByRole('heading', { level: 2, name: title })).toBeVisible();
 }
 
-async function newListing(page: Page, type: string) {
+async function newListing(page: Page, type: string): Promise<string> {
   await page.goto('/es/panel/publicaciones');
   await page.getByRole('button', { name: 'Nueva publicación' }).first().click();
   const dialog = page.getByRole('dialog');
@@ -32,6 +34,7 @@ async function newListing(page: Page, type: string) {
   await dialog.getByRole('button', { name: 'Crear borrador' }).click();
   await expect(page).toHaveURL(/\/es\/panel\/publicaciones\/[\w-]+/);
   await expect(page.getByRole('heading', { level: 2, name: 'Lo básico' })).toBeVisible();
+  return page.url().split('/').pop()!.split('?')[0]!;
 }
 
 async function basics(page: Page, title: string) {
@@ -72,7 +75,7 @@ test('un Guía aprobado publica una experiencia con horarios y un producto con v
   await signIn(page, 'guia@indomitox.co');
 
   // ─── Experiencia ───────────────────────────────────────────
-  await newListing(page, 'Experiencia');
+  const experienceId = await newListing(page, 'Experiencia');
   await basics(page, experience);
 
   // Ubicación: el municipio y la dirección vienen del Guía; el punto, del centro del municipio.
@@ -104,7 +107,7 @@ test('un Guía aprobado publica una experiencia con horarios y un producto con v
   await publish(page);
 
   // ─── Producto con variantes ────────────────────────────────
-  await newListing(page, 'Producto');
+  const productId = await newListing(page, 'Producto');
   await basics(page, product);
 
   await next(page, 'Dónde');
@@ -140,4 +143,13 @@ test('un Guía aprobado publica una experiencia con horarios y un producto con v
   // Y sus horarios en el calendario (vista de semana).
   await page.goto('/es/panel/calendario?vista=semana');
   await expect(page.getByText(experience).first()).toBeVisible();
+
+  // Limpieza: se archivan para no llenar el panel del Guía de la semilla en cada corrida.
+  for (const listingId of [experienceId, productId]) {
+    const response = await page.request.post(`${API_URL}/v1/host/listings/${listingId}/transition`, {
+      headers: { origin: WEB_URL },
+      data: { action: 'ARCHIVE' },
+    });
+    expect(response.ok()).toBeTruthy();
+  }
 });
