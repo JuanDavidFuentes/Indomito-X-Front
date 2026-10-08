@@ -69,9 +69,9 @@ test('alta del Guía, aprobación del administrador y página pública con el RN
   await page.getByLabel('Número de RNT').fill('54321');
   await page.getByLabel('Teléfono de contacto').fill('+57 315 555 0101');
   await page.getByLabel('Correo de contacto').fill('reservas@cumbresur.co');
-  await page.getByLabel('Departamento').click();
-  await page.getByRole('option', { name: 'Santander', exact: true }).click();
-  await page.getByLabel('Municipio').fill('Curití');
+  // Municipio del DANE con el buscador (F3).
+  await page.getByRole('combobox', { name: 'Municipio' }).fill('Curití');
+  await page.getByRole('option', { name: /Curití/ }).click();
   await page.getByLabel('Dirección').fill('Vereda Palo Blanco');
   await page.getByRole('checkbox', { name: /Rafting/ }).click();
   await page.getByRole('checkbox', { name: /Senderismo/ }).click();
