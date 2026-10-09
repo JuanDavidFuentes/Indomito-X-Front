@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { Logo } from '@/components/brand/logo';
 import { TopoPattern } from '@/components/brand/topo-pattern';
 import { Link } from '@/i18n/navigation';
+import { CurrencySwitcher } from './currency-switcher';
 
 export function SiteFooter() {
   const t = useTranslations();
@@ -42,7 +43,13 @@ export function SiteFooter() {
           </nav>
         </div>
         <div className="mt-10 flex flex-col gap-2 border-t border-night-foreground/15 pt-6 text-sm text-night-foreground/75 sm:flex-row sm:items-center sm:justify-between">
-          <p>{t('footer.rights', { year: new Date().getFullYear() })}</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p>{t('footer.rights', { year: new Date().getFullYear() })}</p>
+            {/* En el teléfono el encabezado no tiene espacio para la moneda (SRCH-07). */}
+            <span className="-ml-2.5 text-night-foreground/90 sm:hidden">
+              <CurrencySwitcher />
+            </span>
+          </div>
           <p className="font-display tracking-[0.14em]">
             San Gil · {t('home.heroCoordinates')} · {t('home.heroAltitude', { meters: HERO_FIELD_DATA.altitudeM })}
           </p>

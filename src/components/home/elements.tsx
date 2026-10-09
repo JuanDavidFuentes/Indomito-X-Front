@@ -37,7 +37,7 @@ export function Elements() {
           return (
             <li key={element} className={isLast ? 'col-span-2 lg:col-span-1' : undefined}>
               <Link
-                href={{ pathname: '/buscar', query: { elemento: element } }}
+                href={{ pathname: '/buscar', query: { element } }}
                 className={`group relative isolate flex h-full flex-col justify-end overflow-hidden rounded-2xl p-4 text-night-foreground shadow-sm transition-[transform,box-shadow] duration-300 ease-trail hover:-translate-y-1 hover:shadow-xl sm:p-5 dark:ring-1 dark:ring-border ${
                   isLast ? 'aspect-[16/9] lg:aspect-[3/4]' : 'aspect-[3/4]'
                 }`}

@@ -1,10 +1,10 @@
-import { HERO_FIELD_DATA, HOME_SPORTS, PHOTO_CREDITS } from '@juandavidfuentes/indomitox-shared';
-import { CalendarBlank, MagnifyingGlass, MapPin } from '@phosphor-icons/react/ssr';
+import { HERO_FIELD_DATA, HOME_SPORTS, PHOTO_CREDITS, sportSlugFor, type Locale, type SportDto } from '@juandavidfuentes/indomitox-shared';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { TopoPattern } from '@/components/brand/topo-pattern';
-import { getPathname, Link } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { PHOTOS } from '@/lib/photos';
+import { HeroSearch } from './hero-search';
 
 const HERO_PHOTO = 'hero-chicamocha-parapente';
 
@@ -12,10 +12,11 @@ const HERO_PHOTO = 'hero-chicamocha-parapente';
  * Hero a sangre con la foto del Chicamocha, curvas de nivel, titular itálico y buscador.
  * Sube 4rem (-mt-16) para quedar debajo del encabezado transparente de la portada.
  */
-export function Hero() {
+export function Hero({ sports }: { sports: SportDto[] }) {
   const t = useTranslations();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const credit = PHOTO_CREDITS[HERO_PHOTO];
+  const slugs = new Map(sports.map((sport) => [sport.key, sportSlugFor(sport.slugs, locale)]));
 
   return (
     <section className="relative isolate -mt-16 overflow-hidden bg-night text-night-foreground clip-slope-b">
@@ -50,50 +51,14 @@ export function Hero() {
             {t('home.heroSubtitle')}
           </p>
 
-          <form
-            action={getPathname({ href: '/buscar', locale })}
-            role="search"
-            className="mt-8 grid max-w-2xl animate-rise gap-1 rounded-2xl bg-card p-2 text-card-foreground shadow-2xl shadow-night/50 [animation-delay:270ms] sm:grid-cols-[1.4fr_1fr_auto]"
-          >
-            <label className="flex flex-col justify-center gap-0.5 rounded-xl px-3 py-2 transition-colors focus-within:bg-muted">
-              <span className="text-xs font-bold tracking-[0.08em] uppercase">{t('home.searchLabel')}</span>
-              <span className="flex items-center gap-2">
-                <MapPin size={20} className="shrink-0 text-muted-foreground" aria-hidden="true" />
-                <input
-                  name="q"
-                  type="search"
-                  autoComplete="off"
-                  placeholder={t('home.searchPlaceholder')}
-                  className="h-9 w-full min-w-0 bg-transparent text-base placeholder:text-muted-foreground focus-visible:outline-none"
-                />
-              </span>
-            </label>
-            <label className="flex flex-col justify-center gap-0.5 rounded-xl px-3 py-2 transition-colors focus-within:bg-muted sm:border-l sm:border-border">
-              <span className="text-xs font-bold tracking-[0.08em] uppercase">{t('home.searchWhen')}</span>
-              <span className="flex items-center gap-2">
-                <CalendarBlank size={20} className="shrink-0 text-muted-foreground" aria-hidden="true" />
-                <input
-                  name="fecha"
-                  type="date"
-                  className="h-9 w-full min-w-0 bg-transparent text-base text-card-foreground focus-visible:outline-none"
-                />
-              </span>
-            </label>
-            <button
-              type="submit"
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-semibold text-primary-foreground transition-[filter,transform] duration-150 hover:brightness-110 active:scale-[0.98]"
-            >
-              <MagnifyingGlass size={20} weight="bold" aria-hidden="true" />
-              {t('home.searchButton')}
-            </button>
-          </form>
+          <HeroSearch />
 
           <nav aria-label={t('home.quickSports')} className="mt-6 animate-rise [animation-delay:360ms]">
             <ul className="flex flex-wrap gap-2">
               {HOME_SPORTS.slice(0, 5).map((sport) => (
                 <li key={sport}>
                   <Link
-                    href={{ pathname: '/buscar', query: { deporte: sport } }}
+                    href={slugs.get(sport) ? { pathname: '/[sport]', params: { sport: slugs.get(sport)! } } : { pathname: '/buscar', query: { sport } }}
                     className="inline-flex h-11 items-center rounded-full border border-night-foreground/30 bg-night-foreground/10 px-4 text-sm font-semibold backdrop-blur-sm transition-colors duration-150 hover:bg-night-foreground/20"
                   >
                     {t(`sports.${sport}`)}

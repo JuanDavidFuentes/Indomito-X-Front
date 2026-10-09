@@ -1,7 +1,7 @@
 'use client';
 
 import { LOCALES, WEB_PATHNAMES } from '@juandavidfuentes/indomitox-shared';
-import { Compass, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
+import { Compass, Heart, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
@@ -82,6 +82,12 @@ export function AccountMenu() {
           <Link href="/cuenta">
             <UserCircle size={20} aria-hidden="true" />
             {t('nav.account')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/cuenta/favoritos">
+            <Heart size={20} aria-hidden="true" />
+            {t('nav.favorites')}
           </Link>
         </DropdownMenuItem>
         {user.host || user.signupIntent === 'HOST' ? (

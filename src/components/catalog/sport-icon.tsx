@@ -1,3 +1,5 @@
+'use client';
+
 import type { SportIcon as SportIconName } from '@juandavidfuentes/indomitox-shared';
 import {
   AirplaneTilt,

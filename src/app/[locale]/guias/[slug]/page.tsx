@@ -6,6 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { cache } from 'react';
 import { GuideProfile } from '@/components/guide/guide-profile';
 import { routing } from '@/i18n/routing';
+import { searchListings } from '@/lib/api/public';
 import { publicApi, publicResource } from '@/lib/api/server';
 
 /** Páginas de Guía bajo demanda: se generan la primera vez que se visitan y se renuevan cada 5 minutos (ISR). */
@@ -46,7 +47,11 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/guias/[s
 export default async function GuidePage({ params }: PageProps<'/[locale]/guias/[slug]'>) {
   const { locale, slug } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
-  const [guide, sports] = await Promise.all([getGuide(slug), publicApi<SportDto[]>('/v1/sports', [])]);
+  const [guide, sports, listings] = await Promise.all([
+    getGuide(slug),
+    publicApi<SportDto[]>('/v1/sports', []),
+    searchListings({ host: slug }, 300),
+  ]);
   if (!guide) notFound();
 
   const webUrl = process.env.NEXT_PUBLIC_WEB_URL ?? 'http://localhost:3000';
@@ -74,7 +79,7 @@ export default async function GuidePage({ params }: PageProps<'/[locale]/guias/[
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
-      <GuideProfile guide={guide} sports={sports} />
+      <GuideProfile guide={guide} sports={sports} listings={listings?.items ?? []} />
     </>
   );
 }

@@ -9,6 +9,8 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
+import { getFxRates } from '@/lib/api/public';
+import { FxProvider } from '@/lib/fx';
 import '../globals.css';
 
 const barlow = Barlow({
@@ -52,7 +54,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
     description: t('heroSubtitle'),
     alternates: {
       canonical: `/${locale}`,
-      languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])),
+      languages: { ...Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])), 'x-default': '/es' },
     },
     openGraph: {
       siteName: 'Indómito X',
@@ -65,7 +67,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
-  const t = await getTranslations({ locale, namespace: 'common' });
+  const [t, fxRates] = await Promise.all([getTranslations({ locale, namespace: 'common' }), getFxRates()]);
 
   return (
     <html
@@ -82,11 +84,13 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
         </a>
         <NextIntlClientProvider>
           <Providers>
-            <SiteHeader />
-            <main id="contenido" className="flex-1">
-              {children as ReactNode}
-            </main>
-            <SiteFooter />
+            <FxProvider rates={fxRates}>
+              <SiteHeader />
+              <main id="contenido" className="flex-1">
+                {children as ReactNode}
+              </main>
+              <SiteFooter />
+            </FxProvider>
           </Providers>
         </NextIntlClientProvider>
       </body>

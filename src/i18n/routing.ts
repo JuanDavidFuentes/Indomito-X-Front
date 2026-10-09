@@ -12,8 +12,11 @@ export const routing = defineRouting({
   localePrefix: 'always',
   pathnames: {
     '/': '/',
-    '/buscar': { es: '/buscar', en: '/search', fr: '/recherche' },
-    '/creditos': { es: '/creditos', en: '/credits', fr: '/credits' },
     ...WEB_PATHNAMES,
+    // Páginas de aterrizaje y detalle (SRCH-06, LIST-05): las direcciones de los deportes ya
+    // vienen traducidas del catálogo (`/es/torrentismo`, `/en/canyoning`), no de next-intl.
+    '/[sport]': '/[sport]',
+    '/[sport]/[place]': '/[sport]/[place]',
+    '/[sport]/[place]/[slug]': '/[sport]/[place]/[slug]',
   },
 });

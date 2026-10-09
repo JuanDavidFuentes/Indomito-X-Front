@@ -1,7 +1,9 @@
 import {
   departmentName,
+  LISTING_TYPES,
   pickLocalized,
   SOCIAL_NETWORKS,
+  type ListingCardDto,
   type Locale,
   type PublicHostResponse,
   type SocialNetwork,
@@ -28,6 +30,7 @@ import Image from 'next/image';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { LogoMark } from '@/components/brand/logo';
 import { TopoPattern } from '@/components/brand/topo-pattern';
+import { ListingCard } from '@/components/listing/listing-card';
 import { Link } from '@/i18n/navigation';
 
 const SOCIAL_ICONS: Record<Exclude<SocialNetwork, 'whatsapp'>, Icon> = {
@@ -59,10 +62,10 @@ function Section({ id, title, children }: { id: string; title: string; children:
 
 /**
  * Página pública del Guía (PAGE-01): portada con velo Noche y corte diagonal, marca, RNT visible
- * (lo exige la ley), actividades, idiomas y redes. Las publicaciones (F3), las reseñas (F7) y el
- * chat (F6) llegan en sus fases.
+ * (lo exige la ley), actividades, idiomas, redes y sus publicaciones agrupadas por tipo (la
+ * tienda de productos incluida). Las reseñas (F7) y el chat (F6) llegan en sus fases.
  */
-export function GuideProfile({ guide, sports }: { guide: PublicHostResponse; sports: SportDto[] }) {
+export function GuideProfile({ guide, sports, listings }: { guide: PublicHostResponse; sports: SportDto[]; listings: ListingCardDto[] }) {
   const t = useTranslations();
   const format = useFormatter();
   const locale = useLocale() as Locale;
@@ -149,17 +152,38 @@ export function GuideProfile({ guide, sports }: { guide: PublicHostResponse; spo
           ) : null}
 
           <Section id="aventuras" title={t('guide.listingsTitle')}>
-            <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-center">
-              <TopoPattern variant="band" className="absolute inset-0 size-full text-primary/10" />
-              <div className="relative grid justify-items-center gap-3">
-                <Backpack size={44} weight="duotone" className="text-primary" aria-hidden="true" />
-                <p className="max-w-md text-lg font-semibold">{t('guide.listingsEmpty', { name: guide.name })}</p>
-                <Link href="/" className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary underline-offset-4 hover:underline">
-                  {t('guide.exploreMore')}
-                  <ArrowRight size={18} weight="bold" aria-hidden="true" />
-                </Link>
+            {listings.length ? (
+              <div className="grid gap-10">
+                {LISTING_TYPES.filter((type) => listings.some((listing) => listing.type === type)).map((type) => (
+                  <section key={type} aria-labelledby={`tipo-${type}`}>
+                    <h3 id={`tipo-${type}`} className="font-display text-sm font-bold tracking-[0.16em] text-muted-foreground uppercase">
+                      {t(`listingType.${type}`)}
+                    </h3>
+                    <ul className="mt-4 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+                      {listings
+                        .filter((listing) => listing.type === type)
+                        .map((listing) => (
+                          <li key={listing.id}>
+                            <ListingCard listing={listing} sports={sports} sizes="(min-width: 1280px) 16rem, (min-width: 640px) 40vw, 92vw" />
+                          </li>
+                        ))}
+                    </ul>
+                  </section>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-center">
+                <TopoPattern variant="band" className="absolute inset-0 size-full text-primary/10" />
+                <div className="relative grid justify-items-center gap-3">
+                  <Backpack size={44} weight="duotone" className="text-primary" aria-hidden="true" />
+                  <p className="max-w-md text-lg font-semibold">{t('guide.listingsEmpty', { name: guide.name })}</p>
+                  <Link href="/buscar" className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary underline-offset-4 hover:underline">
+                    {t('guide.exploreMore')}
+                    <ArrowRight size={18} weight="bold" aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
+            )}
           </Section>
 
           <Section id="resenas" title={t('guide.reviewsTitle')}>

@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Logo } from '@/components/brand/logo';
 import { Link } from '@/i18n/navigation';
 import { AccountMenu } from './account-menu';
+import { CurrencySwitcher } from './currency-switcher';
 import { HeaderFrame } from './header-frame';
 import { LocaleSwitcher } from './locale-switcher';
 import { ThemeToggle } from './theme-toggle';
@@ -37,6 +38,9 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-0.5 sm:gap-2">
           <LocaleSwitcher />
+          <span className="max-sm:hidden">
+            <CurrencySwitcher />
+          </span>
           <ThemeToggle />
           <AccountMenu />
         </div>
